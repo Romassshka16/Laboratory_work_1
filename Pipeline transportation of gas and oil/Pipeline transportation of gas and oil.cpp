@@ -198,13 +198,13 @@ Pipeline LoadPipeline()
             pl.in_repair = (parameters_vector[3] == "1") ? true : false;
 
         }
-        return pl;
     }
     else
     {
         cout << "Error in opening file" << endl;
     }
     fin.close();
+    return pl;
 }
 
 
@@ -241,14 +241,29 @@ CompressorStation LoadCS()
             cs.efficiency = stof(parameters_vector[3]);
 
         }
-        return cs;
     }
     else
     {
         cout << "Error in opening file" << endl;
     }
     fin.close();
+    return cs;
 }
+
+
+void PrintMenu()
+{
+    cout << "1. Add Pipeline" << endl
+        << "2. Add CS" << endl
+        << "3. Show Pipelines and Compressor Stations" << endl
+        << "4. Edit Pipeline" << endl
+        << "5. Edit CS" << endl
+        << "6. Save" << endl
+        << "7. Load" << endl
+        << "0. Exit" << endl;
+
+}
+
 
 
 int main()
@@ -256,6 +271,67 @@ int main()
 
     Pipeline pl;
     CompressorStation cs;
+
+    while (1)
+    {
+        PrintMenu();
+        int i = 0;
+        cin >> i;
+
+        switch (i)
+        {
+        case 1:
+        {
+            pl = CreatePipeline();
+            break;
+        }
+        case 2:
+        {
+            cs = CreateCS();
+            break;
+        }
+        case 3:
+        {
+            //Проверка, что труба существует и КС тоже
+            cout << "\nInformation about pipelines\n" << endl;
+            ShowPipeline(pl);
+            cout << "\nInformation about KS\n" << endl;
+            ShowCS(cs);
+            break;
+        }
+        case 4:
+        {
+            EditPipeline(pl);
+            break;
+        }
+        case 5:
+        {
+            EditCS(cs);
+            break;
+        }
+        case 6:
+        {
+            SaveCS(cs);
+            SavePipeline(pl);
+            break;
+        }
+        case 7:
+        {
+            pl = LoadPipeline();
+            cs = LoadCS();
+            break;
+        }
+        case 0:
+        {
+            return 0;
+        }
+        default:
+        {
+            cout << "Wrong action" << endl;
+        }
+        }
+    }
+
     //pl = CreatePipeline();
     //ShowPipeline(pl);
     //EditPipeline(pl);
@@ -267,8 +343,8 @@ int main()
     ShowCS(station);
     EditCS(station);
     ShowCS(station);*/
-    cs = LoadCS();
-    ShowCS(cs);
+    //cs = CreateCS();
+    //ShowCS(cs);
 
 }
 
