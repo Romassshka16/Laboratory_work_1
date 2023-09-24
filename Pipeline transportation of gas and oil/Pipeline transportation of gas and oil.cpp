@@ -1,5 +1,7 @@
 ﻿#include <iostream>
 #include <string>
+#include <fstream>
+#include <vector>
 
 using namespace std;
 
@@ -119,33 +121,154 @@ void EditCS(CompressorStation& cs)
 }
 
 
+void SavePipeline(const Pipeline& pl)
+{
+    ofstream fout;
+    fout.open("Pipelines.txt", ios::out);
+    if (fout)
+    {
+        fout << pl.km_mark << ";"
+            << pl.length << ";"
+            << pl.diameter << ";"
+            << pl.in_repair << ";"
+            << endl;
+        cout << "Data is successfully saved" << endl;
+    }
+    else
+    {
+        cout << "Error in opening file" << endl;
+    }
+    fout.close();
+
+}
+
+
+void SaveCS(const CompressorStation& cs)
+{
+    ofstream fout;
+    fout.open("CS.txt", ios::out);
+    if (fout)
+    {
+        fout << cs.title << ";"
+            << cs.all_workshop << ";"
+            << cs.active_workshop << ";"
+            << cs.efficiency << ";"
+            << endl;
+        cout << "Data about is successfully saved" << endl;
+    }
+    else
+    {
+        cout << "Error in opening file" << endl;
+    }
+    fout.close();
+
+}
+
+
+Pipeline LoadPipeline()
+{
+    ifstream fin;
+    fin.open("Pipelines.txt");
+    Pipeline pl;
+
+    if (fin)
+    {
+        string line;
+        string parameter = "";
+        vector <string> parameters_vector;
+        
+        while (fin >> line)
+        {
+            for (char const &i : line)
+            {
+                if (i != ';')
+                {
+                    parameter += i;
+                }
+                else
+                {
+                    parameters_vector.push_back(parameter);
+                    parameter = "";
+                }
+            }
+
+            pl.km_mark = parameters_vector[0];
+            pl.length = stoi(parameters_vector[1]);
+            pl.diameter = stoi(parameters_vector[2]);
+            pl.in_repair = (parameters_vector[3] == "1") ? true : false;
+
+        }
+        return pl;
+    }
+    else
+    {
+        cout << "Error in opening file" << endl;
+    }
+    fin.close();
+}
+
+
+CompressorStation LoadCS()
+{
+    ifstream fin;
+    fin.open("CS.txt");
+    CompressorStation cs;
+
+    if (fin)
+    {
+        string line;
+        string parameter = "";
+        vector <string> parameters_vector;
+
+        while (fin >> line)
+        {
+            for (char const& i : line)
+            {
+                if (i != ';')
+                {
+                    parameter += i;
+                }
+                else
+                {
+                    parameters_vector.push_back(parameter);
+                    parameter = "";
+                }
+            }
+
+            cs.title = parameters_vector[0];
+            cs.all_workshop = stoi(parameters_vector[1]);
+            cs.active_workshop = stoi(parameters_vector[2]);
+            cs.efficiency = stof(parameters_vector[3]);
+
+        }
+        return cs;
+    }
+    else
+    {
+        cout << "Error in opening file" << endl;
+    }
+    fin.close();
+}
+
+
 int main()
 {
 
-    Pipeline pipe;
-    CompressorStation station;
-    pipe = CreatePipeline();
-    ShowPipeline(pipe);
-    EditPipeline(pipe);
-    ShowPipeline(pipe);
-    EditPipeline(pipe);
-    ShowPipeline(pipe);
-    EditPipeline(pipe);
-    ShowPipeline(pipe);
-    EditPipeline(pipe);
-    ShowPipeline(pipe);
-    EditPipeline(pipe);
-    ShowPipeline(pipe);
-    EditPipeline(pipe);
-    ShowPipeline(pipe);
-    station = CreateCS();
+    Pipeline pl;
+    CompressorStation cs;
+    //pl = CreatePipeline();
+    //ShowPipeline(pl);
+    //EditPipeline(pl);
+    //ShowPipeline(pl);
+    //pl = LoadPipeline();
+    //ShowPipeline(pl);
+    //SavePipeline(pl);
+    /*station = CreateCS();
     ShowCS(station);
     EditCS(station);
-    ShowCS(station);
-    EditCS(station);
-    ShowCS(station);
-
-
+    ShowCS(station);*/
+    cs = LoadCS();
+    ShowCS(cs);
 
 }
 
