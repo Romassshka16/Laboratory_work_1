@@ -5,13 +5,74 @@
 
 using namespace std;
 
+template <typename T>
+T GetCorrectNumber(T min, T max)
+{
+    T x;
+    while ((cin >> x).fail() || cin.peek() != '\n' || x < min || x > max)
+    {
+        cin.clear();
+        cin.ignore(10000, '\n');
+        cout << "Type correct number (" << min << "-" << max << "):";
+    }
+    return x;
+}
 
-struct Pipeline
+
+char GetCorrectChar()
+{
+    char x;
+    while ((cin >> x).fail() || cin.peek() != '\n' || !(strchr("YNyn", x)))
+    {
+        cin.clear();
+        cin.ignore(10000, '\n');
+        cout << "Please enter \"y\" or \"n\": ";
+    }
+    return x;
+}
+
+
+string GetCorrectString() {
+    string s;
+    int count = 0;
+    cin.ignore(10000, '\n');
+    getline(cin, s);
+
+    for (char const& i : s) {
+        if (i == 32) {
+            count += 1;
+        }
+    }
+
+    while (count == s.size()) {
+        cout << "Line cannot be empty" << endl;
+        getline(cin, s);
+
+        count = 0;
+        for (char const& i : s) {
+            if (i == 32) {
+                count++;
+            }
+        }
+
+    }
+
+    return s;
+}
+
+
+struct Pipe
 {
     string km_mark;
-    int length;
+    float length;
     int diameter;
     bool in_repair;
+    Pipe() {
+        km_mark = "";
+        length = 0;
+        diameter = 0;
+        in_repair = 0;
+    }
 };
 
 
@@ -21,91 +82,97 @@ struct CompressorStation
     int all_workshop;
     int active_workshop;
     float efficiency;
+    CompressorStation() {
+        title = "";
+        all_workshop = 0;
+        active_workshop = 0;
+        efficiency = 0;
+    }
 };
 
 
-Pipeline CreatePipeline()
+void CreatePipe(Pipe& p)
 {
-    Pipeline pl;
+    //Pipeline pl;
 
     cout << "Kilometer mark: ";
-    cin >> pl.km_mark;
+    p.km_mark = GetCorrectString();
 
-    cout << "Length (km): ";
-    cin >> pl.length;
+    cout << "Length (1 - 5000 km): ";
+    p.length = GetCorrectNumber(1.0, 5000.0);
 
-    cout << "Diameter (mm): ";
-    cin >> pl.diameter;
+    cout << "Diameter (700 - 1400 mm): ";
+    p.diameter = GetCorrectNumber(700, 1400);
 
     char in_repair;
 
-    cout << "Is this pipeline in repair? (y/n): ";
-    cin >> in_repair;
-    pl.in_repair = (in_repair == 'y') ? true : false;
-    return pl;
+    cout << "Is this pipe in repair? (y/n): ";
+    in_repair = GetCorrectChar();
+    p.in_repair = (in_repair == 'y' or in_repair == 'Y') ? true : false;
+    //return pl;
 }
 
 
-CompressorStation CreateCS()
+void CreateCS(CompressorStation& cs)
 {
-    CompressorStation cs;
+    //CompressorStation cs;
 
     cout << "Title of CS: ";
-    cin >> cs.title;
+    cs.title = GetCorrectString();
 
-    cout << "Number of all workshop: ";
-    cin >> cs.all_workshop;
+    cout << "Number of all workshop (1 - 15): ";
+    cs.all_workshop = GetCorrectNumber(1, 15);
 
-    cout << "Number of active workshop: ";
-    cin >> cs.active_workshop;
+    cout << "Number of active workshop (1 - " << cs.all_workshop << "): ";
+    cs.active_workshop = GetCorrectNumber(1, cs.all_workshop);
 
-    cout << "Efficiency: ";
-    cin >> cs.efficiency;
+    cout << "Efficiency (0.00 - 1.00): ";
+    cs.efficiency = GetCorrectNumber(0.0, 1.0);
     
-    return cs;
+    //return cs;
 }
 
 
-void ShowPipeline(const Pipeline& pl)
+void ShowPipe(const Pipe& p)
 {
-    cout << "\tInformation about pipeline " << "\"" << pl.km_mark << "\"" << endl;
-    cout << "Kilometer mark: " << pl.km_mark << endl;
-    cout << "Length: " << pl.length << " km" << endl;
-    cout << "Diameter: " << pl.diameter << " mm" << endl;
-    
+    cout << "\n\tInformation about pipe: " << "\"" << p.km_mark << "\"\n" << endl;
+    cout << " Kilometer mark: " << p.km_mark << endl;
+    cout << " Length: " << p.length << " km" << endl;
+    cout << " Diameter: " << p.diameter << " mm" << endl;
+
     string in_repair;
-    in_repair = (pl.in_repair) ? "This pipeline is in repair" : "This pipeline is in working condition";
+    in_repair = (p.in_repair) ? " This pipe is in repair\n" : " This pipe is in working condition\n";
     cout << in_repair << endl;
 }
 
 
 void ShowCS(const CompressorStation& cs)
 {
-    cout << "\tInformation about CS " << "\"" << cs.title << "\"" << endl;
-    cout << "Title: " << cs.title << endl;
-    cout << "Number of all workshop: " << cs.all_workshop << endl;
-    cout << "Nubmer of active workshop: " << cs.active_workshop << endl;
-    cout << "Efficiency: " << cs.efficiency << endl;
+    cout << "\n\tInformation about CS " << "\"" << cs.title << "\"\n" << endl;
+    cout << " Title: " << cs.title << endl;
+    cout << " Number of all workshop: " << cs.all_workshop << endl;
+    cout << " Nubmer of active workshop: " << cs.active_workshop << endl;
+    cout << " Efficiency: " << cs.efficiency * 100 << "%" << endl;
 }
 
 
-void EditPipeline(Pipeline& pl)
+void EditPipe(Pipe& p)
 {
     char in_repair;
 
-    if (pl.in_repair)
+    if (p.in_repair)
     {
-        cout << "This pipeline is in repair" << endl;
-        cout << "Open this pipeline for using? (y/n): ";
-        cin >> in_repair;
-        pl.in_repair = (in_repair == 'y') ? false : true;
+        cout << "This pipe is in repair" << endl;
+        cout << "Open this pipe for using? (y/n): ";
+        in_repair = GetCorrectChar();
+        p.in_repair = (in_repair == 'y' or in_repair == 'Y') ? false : true;
     }
     else
     {
-        cout << "This pipeline is in working condition" << endl;
-        cout << "Close this pipeline for reparing? (y/n): ";
-        cin >> in_repair;
-        pl.in_repair = (in_repair == 'y') ? true : false;
+        cout << "This pipe is in working condition" << endl;
+        cout << "Close this pipe for reparing? (y/n): ";
+        in_repair = GetCorrectChar();
+        p.in_repair = (in_repair == 'y' or in_repair == 'Y') ? true : false;
     }
 }
 
@@ -117,22 +184,22 @@ void EditCS(CompressorStation& cs)
         cs.all_workshop << endl;
 
     cout << "Enter new number of active workshop: ";
-    cin >> cs.active_workshop;
+    cs.active_workshop = GetCorrectNumber(1, cs.all_workshop);
 }
 
 
-void SavePipeline(const Pipeline& pl)
+void SavePipe(const Pipe& p)
 {
     ofstream fout;
-    fout.open("Pipelines.txt", ios::out);
+    fout.open("Pipes.txt", ios::out);
     if (fout)
     {
-        fout << pl.km_mark << ";"
-            << pl.length << ";"
-            << pl.diameter << ";"
-            << pl.in_repair << ";"
+        fout << p.km_mark << ";"
+            << p.length << ";"
+            << p.diameter << ";"
+            << p.in_repair << ";"
             << endl;
-        cout << "Data is successfully saved" << endl;
+        cout << "\n Data of pipe is successfully saved" << endl;
     }
     else
     {
@@ -154,7 +221,7 @@ void SaveCS(const CompressorStation& cs)
             << cs.active_workshop << ";"
             << cs.efficiency << ";"
             << endl;
-        cout << "Data about is successfully saved" << endl;
+        cout << "\n Data of CS is successfully saved" << endl;
     }
     else
     {
@@ -165,98 +232,110 @@ void SaveCS(const CompressorStation& cs)
 }
 
 
-Pipeline LoadPipeline()
+void ReadFile(ifstream& fin, vector <string>& v)
 {
-    ifstream fin;
-    fin.open("Pipelines.txt");
-    Pipeline pl;
-
-    if (fin)
+    string line;
+    string parameter;
+    while (getline(fin, line))
     {
-        string line;
-        string parameter = "";
-        vector <string> parameters_vector;
-        
-        while (fin >> line)
+        for (char const& i : line)
         {
-            for (char const &i : line)
+            if (i != ';')
             {
-                if (i != ';')
-                {
-                    parameter += i;
-                }
-                else
-                {
-                    parameters_vector.push_back(parameter);
-                    parameter = "";
-                }
+                parameter += i;
             }
-
-            pl.km_mark = parameters_vector[0];
-            pl.length = stoi(parameters_vector[1]);
-            pl.diameter = stoi(parameters_vector[2]);
-            pl.in_repair = (parameters_vector[3] == "1") ? true : false;
-
+            else
+            {
+                v.push_back(parameter);
+                parameter = "";
+            }
         }
     }
-    else
-    {
-        cout << "Error in opening file" << endl;
-    }
-    fin.close();
-    return pl;
 }
 
 
-CompressorStation LoadCS()
+void LoadPipe(Pipe& p)
 {
     ifstream fin;
-    fin.open("CS.txt");
-    CompressorStation cs;
+    fin.open("Pipes.txt");
+    //Pipe p;
 
     if (fin)
     {
-        string line;
-        string parameter = "";
-        vector <string> parameters_vector;
+        vector <string> pipe_vector;
+        
+        ReadFile(fin, pipe_vector);
 
-        while (fin >> line)
-        {
-            for (char const& i : line)
-            {
-                if (i != ';')
-                {
-                    parameter += i;
-                }
-                else
-                {
-                    parameters_vector.push_back(parameter);
-                    parameter = "";
-                }
-            }
-
-            cs.title = parameters_vector[0];
-            cs.all_workshop = stoi(parameters_vector[1]);
-            cs.active_workshop = stoi(parameters_vector[2]);
-            cs.efficiency = stof(parameters_vector[3]);
-
-        }
+        p.km_mark = pipe_vector[0];
+        p.length = stoi(pipe_vector[1]);
+        p.diameter = stoi(pipe_vector[2]);
+        p.in_repair = (pipe_vector[3] == "1") ? true : false;
     }
     else
     {
         cout << "Error in opening file" << endl;
     }
     fin.close();
-    return cs;
+    //return p;
+}
+
+
+void LoadCS(CompressorStation& cs)
+{
+    ifstream fin;
+    fin.open("CS.txt");
+    //CompressorStation cs;
+
+    if (fin)
+    {
+        vector <string> CS_vector;
+        ReadFile(fin, CS_vector);
+
+        cs.title = CS_vector[0];
+        cs.all_workshop = stoi(CS_vector[1]);
+        cs.active_workshop = stoi(CS_vector[2]);
+        cs.efficiency = stof(CS_vector[3]);
+
+    }
+    else
+    {
+        cout << "Error in opening file" << endl;
+    }
+    fin.close();
+    //return cs;
+}
+
+
+bool CheckPipe(const Pipe&p)
+{
+    if (p.km_mark != "") {
+        return true;
+    } 
+    else {
+        cout << "\n Information about pipe is available. Add pipe!\n" << endl;
+        return false;
+    }
+}
+
+
+bool CheckCS(const CompressorStation& cs)
+{
+    if (cs.title != "") {
+        return true;
+    } 
+    else {
+        cout << "\n Information about CS is available. Add CS!\n" << endl;
+        return false;
+    }
 }
 
 
 void PrintMenu()
 {
-    cout << "1. Add Pipeline" << endl
+    cout << "1. Add Pipe" << endl
         << "2. Add CS" << endl
-        << "3. Show Pipelines and Compressor Stations" << endl
-        << "4. Edit Pipeline" << endl
+        << "3. Show Pipes and Compressor Stations" << endl
+        << "4. Edit Pipe" << endl
         << "5. Edit CS" << endl
         << "6. Save" << endl
         << "7. Load" << endl
@@ -265,60 +344,89 @@ void PrintMenu()
 }
 
 
-
 int main()
 {
 
-    Pipeline pl;
+    Pipe p;
     CompressorStation cs;
 
     while (1)
     {
         PrintMenu();
-        int i = 0;
-        cin >> i;
-
-        switch (i)
+        switch (GetCorrectNumber(0, 7))
         {
         case 1:
         {
-            pl = CreatePipeline();
+            system("cls");
+            CreatePipe(p);
             break;
         }
         case 2:
         {
-            cs = CreateCS();
+            system("cls");
+            CreateCS(cs);
             break;
         }
         case 3:
         {
-            //Проверка, что труба существует и КС тоже
-            cout << "\nInformation about pipelines\n" << endl;
-            ShowPipeline(pl);
-            cout << "\nInformation about KS\n" << endl;
-            ShowCS(cs);
+            system("cls");
+            cout << "\n-----------------------------------------------" << endl;
+            cout << "\tINFORMATION ABOUT ALL PIPES" << endl;
+            cout << "-----------------------------------------------" << endl;
+
+            if (CheckPipe(p))
+            {
+                ShowPipe(p);
+            }
+
+            cout << "-----------------------------------------------" << endl;
+            cout << "\tINFORMATION ABOUT ALL CS" << endl;
+            cout << "-----------------------------------------------" << endl;
+
+            if (CheckCS(cs))
+            {
+                ShowCS(cs);
+            }
+
+            cout << endl;
             break;
         }
         case 4:
         {
-            EditPipeline(pl);
+            system("cls");
+            if (CheckPipe(p)) {
+                EditPipe(p);
+            }
+            
             break;
         }
         case 5:
         {
-            EditCS(cs);
+            system("cls");
+            if (CheckCS(cs)) {
+                EditCS(cs);
+            }
+
             break;
         }
         case 6:
         {
-            SaveCS(cs);
-            SavePipeline(pl);
+            system("cls");
+            if (CheckPipe(p)) {
+                SavePipe(p);
+            }
+
+            if (CheckCS(cs)) {
+                SaveCS(cs);
+            }
+           
             break;
         }
         case 7:
         {
-            pl = LoadPipeline();
-            cs = LoadCS();
+            system("cls");
+            LoadPipe(p);
+            LoadCS(cs);
             break;
         }
         case 0:
@@ -327,25 +435,11 @@ int main()
         }
         default:
         {
+            system("cls");
             cout << "Wrong action" << endl;
         }
         }
     }
-
-    //pl = CreatePipeline();
-    //ShowPipeline(pl);
-    //EditPipeline(pl);
-    //ShowPipeline(pl);
-    //pl = LoadPipeline();
-    //ShowPipeline(pl);
-    //SavePipeline(pl);
-    /*station = CreateCS();
-    ShowCS(station);
-    EditCS(station);
-    ShowCS(station);*/
-    //cs = CreateCS();
-    //ShowCS(cs);
-
 }
 
 
