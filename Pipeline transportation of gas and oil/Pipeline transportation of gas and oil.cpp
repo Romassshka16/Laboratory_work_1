@@ -221,7 +221,7 @@ void SaveCS(const CompressorStation& cs)
             << cs.active_workshop << ";"
             << cs.efficiency << ";"
             << endl;
-        cout << "\n Data of CS is successfully saved" << endl;
+        cout << "\n Data of CS is successfully saved\n" << endl;
     }
     else
     {
@@ -244,9 +244,11 @@ void ReadFile(ifstream& fin, vector <string>& v)
             {
                 parameter += i;
             }
-            else
+            else 
             {
-                v.push_back(parameter);
+                if (parameter != "") {
+                    v.push_back(parameter);
+                }
                 parameter = "";
             }
         }
@@ -266,10 +268,16 @@ void LoadPipe(Pipe& p)
         
         ReadFile(fin, pipe_vector);
 
-        p.km_mark = pipe_vector[0];
-        p.length = stoi(pipe_vector[1]);
-        p.diameter = stoi(pipe_vector[2]);
-        p.in_repair = (pipe_vector[3] == "1") ? true : false;
+        if (pipe_vector.size() == 4) {
+            p.km_mark = pipe_vector[0];
+            p.length = stoi(pipe_vector[1]);
+            p.diameter = stoi(pipe_vector[2]);
+            p.in_repair = (pipe_vector[3] == "1") ? true : false;
+            cout << "\n Data of pipe is successfully load" << endl;
+        }
+        else {
+            cout << "\n File with pipes is empty or conatin not all parameters" << endl;
+        }
     }
     else
     {
@@ -291,10 +299,16 @@ void LoadCS(CompressorStation& cs)
         vector <string> CS_vector;
         ReadFile(fin, CS_vector);
 
-        cs.title = CS_vector[0];
-        cs.all_workshop = stoi(CS_vector[1]);
-        cs.active_workshop = stoi(CS_vector[2]);
-        cs.efficiency = stof(CS_vector[3]);
+        if (CS_vector.size() == 4) {
+            cs.title = CS_vector[0];
+            cs.all_workshop = stoi(CS_vector[1]);
+            cs.active_workshop = stoi(CS_vector[2]);
+            cs.efficiency = stof(CS_vector[3]);
+            cout << "\n Data of CS is successfully load\n" << endl;
+        } 
+        else {
+            cout << "\n File with CS is empty or file contain not all parameters!\n" << endl;
+        }
 
     }
     else
