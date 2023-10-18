@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <fstream>
 #include <string>
 
 
@@ -9,7 +10,9 @@ public:
 	bool in_repair;
 
 	friend std::istream& operator >> (std::istream& in, Pipe& p);
-	friend std::ostream& operator << (std::ostream& out, Pipe& p);
+	friend std::ostream& operator << (std::ostream& out, const Pipe& p);
+	friend std::ifstream& operator >> (std::ifstream& fin, Pipe& p);
+	friend std::ofstream& operator << (std::ofstream& fout, const Pipe& p);
 	std::string PrintStatus() const;
 
 private:

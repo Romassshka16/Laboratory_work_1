@@ -1,4 +1,5 @@
 ﻿#include <iostream>
+#include <fstream>
 #include "Pipe.h"
 #include "Station.h"
 #include "Addition.h"
@@ -160,6 +161,7 @@ int main()
         }
         case 4:
         {
+
             /*if (CheckPipe(p)) {
                 PrintStatusPipe(p);
                 cout << "Do you want to change status? (y/n): ";
@@ -181,25 +183,23 @@ int main()
         }
         case 6:
         {
-           /* if (CheckPipe(p)) {
-                SavePipe(p);
-                cout << "Data of pipe is successfully saved\n";
-            }*/
+            ofstream fout;
+            fout.open("Data.txt");
+            fout << p;
+            fout << cs;
 
-
-            /*if (CheckCS(cs)) {
-                SaveCS(cs);
-                cout << "Data of CS is successfully saved\n";
-            }*/
+            cout << "Data is saved" << endl;
 
             break;
         }
         case 7:
         {
-            /*LoadPipe(p);
-            LoadCS(cs);
-            cout << "Data is successfully load\n";
-            break;*/
+            ifstream fin;
+            fin.open("Data.txt");
+            fin >> p;
+            fin >> cs;
+
+            break;
         }
         case 0:
         {

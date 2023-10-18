@@ -24,15 +24,30 @@ istream& operator>>(istream& in, Pipe& p)
 }
 
 
-ostream& operator<<(ostream& out, Pipe& p)
+ostream& operator<<(ostream& out, const Pipe& p)
 {
-	out << "\tInformation about pipe: " << "\"" << p.km_mark << "\"\n\n";
-	out << "Kilometer mark: " << p.km_mark << "\n";
-	out << "Length: " << p.length << " km" << "\n";
-	out << "Diameter: " << p.diameter << " mm" << "\n";
-	out << p.PrintStatus();
+	out << "\tInformation about Pipe: " << "\"" << p.km_mark << "\"\n\n"
+		<< "Kilometer mark: " << p.km_mark << "\n"
+		<< "Length: " << p.length << " km" << "\n"
+		<< "Diameter: " << p.diameter << " mm" << "\n"
+		<< p.PrintStatus();
 
 	return out;
+}
+
+std::ifstream& operator>>(ifstream& fin, Pipe& p)
+{
+	fin >> p.km_mark >> p.length >> p.diameter >> p.in_repair;
+	return fin;
+}
+
+std::ofstream& operator<<(ofstream& fout, const Pipe& p)
+{
+	fout << p.km_mark << endl
+		<< p.length << endl 
+		<< p.diameter << endl
+		<< p.in_repair << endl;
+	return fout;
 }
 
 
