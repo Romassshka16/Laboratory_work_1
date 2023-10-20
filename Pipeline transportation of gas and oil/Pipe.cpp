@@ -1,7 +1,6 @@
 #include "Pipe.h"
 #include "Addition.h"
 
-
 using namespace std;
 
 
@@ -26,27 +25,35 @@ istream& operator>>(istream& in, Pipe& p)
 
 ostream& operator<<(ostream& out, const Pipe& p)
 {
-	out << "\tInformation about Pipe: " << "\"" << p.km_mark << "\"\n\n"
+	out << "\tInformation about Pipe " << p.id <<
+		": \"" << p.km_mark << "\"\n\n"
+		<< "ID: " << p.id << "\n"
 		<< "Kilometer mark: " << p.km_mark << "\n"
 		<< "Length: " << p.length << " km" << "\n"
 		<< "Diameter: " << p.diameter << " mm" << "\n"
-		<< p.PrintStatus();
+		<< p.PrintStatus() << "\n";
 
 	return out;
 }
 
 std::ifstream& operator>>(ifstream& fin, Pipe& p)
 {
-	fin >> p.km_mark >> p.length >> p.diameter >> p.in_repair;
+	fin >> p.id;
+	fin >> ws;
+	getline(fin, p.km_mark);
+	fin >> p.length;
+	fin >> p.diameter;
+	fin >> p.in_repair;
 	return fin;
 }
 
 std::ofstream& operator<<(ofstream& fout, const Pipe& p)
 {
-	fout << p.km_mark << endl
-		<< p.length << endl 
-		<< p.diameter << endl
-		<< p.in_repair << endl;
+	fout << p.id << "\n"
+		<< p.km_mark << "\n"
+		<< p.length << "\n" 
+		<< p.diameter << "\n"
+		<< p.in_repair << "\n";
 	return fout;
 }
 
@@ -55,4 +62,18 @@ string Pipe::PrintStatus() const
 {
 	return in_repair ? "In repair" : "In Working condition";
 
+}
+
+int Pipe::GetId() const
+{
+	return id;
+}
+
+
+int Pipe::max_id = 0;
+
+
+Pipe::Pipe()
+{
+	id = max_id++;
 }

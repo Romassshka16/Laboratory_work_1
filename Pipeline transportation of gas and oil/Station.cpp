@@ -21,9 +21,11 @@ std::istream& operator>>(std::istream& in, Station& cs)
 	return in;
 }
 
-std::ostream& operator<<(std::ostream& out, Station& cs)
+std::ostream& operator<<(std::ostream& out, const Station& cs)
 {
-	out << "\tInformation about CS: " << "\"" << cs.title << "\"\n\n"
+	out << "\tInformation about CS " << cs.id
+		<< ": \"" << cs.title << "\"\n\n"
+		<< "ID: " << cs.id << "\n"
 		<< "Title: " << cs.title << "\n"
 		<< "All workshops: " << cs.all_workshop << "\n"
 		<< "Active workshops: " << cs.active_workshop << "\n"
@@ -34,15 +36,34 @@ std::ostream& operator<<(std::ostream& out, Station& cs)
 
 std::ifstream& operator>>(std::ifstream& fin, Station& cs)
 {
-	fin >> cs.title >> cs.all_workshop >> cs.active_workshop >> cs.efficiency;
+	fin >> cs.id;
+	fin >> ws;
+	getline(fin, cs.title);
+	fin >> cs.all_workshop;
+	fin >> cs.active_workshop;
+	fin >> cs.efficiency;
 	return fin;
 }
 
-std::ofstream& operator<<(std::ofstream& fout, Station& cs)
+std::ofstream& operator<<(std::ofstream& fout, const Station& cs)
 {
-	fout << cs.title << endl
-		<< cs.all_workshop << endl
-		<< cs.active_workshop << endl
-		<< cs.efficiency << endl;
+	fout << cs.id << "\n"
+		<< cs.title << "\n"
+		<< cs.all_workshop << "\n"
+		<< cs.active_workshop << "\n"
+		<< cs.efficiency << "\n";
 	return fout;
+}
+
+
+int Station::max_id = 0;
+
+int Station::GetId() const
+{
+	return id;
+}
+
+Station::Station()
+{
+	id = max_id++;
 }
