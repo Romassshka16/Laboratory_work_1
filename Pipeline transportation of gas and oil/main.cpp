@@ -3,99 +3,54 @@
 #include "GasSupplySystem.h"
 #include "Addition.h"
 
-
 using namespace std;
-
-
-//void EditPipe(Pipe& p)
-//{
-//    if (GetCorrectChar() == 'y')
-//        p.in_repair = !p.in_repair;
-//}
-//
-//
-//void EditCS(CompressorStation& cs)
-//{
-//    cs.active_workshop = GetCorrectNumber(0, cs.all_workshop);
-//}
-//
-
-
-void PrintMenu()
-{
-    cout << "1. Add Pipe" << endl
-        << "2. Add CS" << endl
-        << "3. Show Pipes and Compressor Stations" << endl
-        << "4. Edit Pipe" << endl
-        << "5. Edit CS" << endl
-        << "6. Save" << endl
-        << "7. Load" << endl
-        << "0. Exit" << endl;
-}
-
 
 int main()
 {
-    GasSupplySystem EGS;
+    GasSupplySystem GSS;
 
     while (1)
     {
-        PrintMenu();
+        Menu(1);
         switch (GetCorrectNumber(0, 7))
         {
         case 1:
         {
             
-            EGS.Add(EGS.GetPipes());
+            GSS.Add(GSS.GetPipes());
             break;
         }
         case 2:
         {
-            EGS.Add(EGS.GetCS());
+            GSS.Add(GSS.GetCS());
             break;
         }
         case 3:
         {
-            cout << "\n-----------------------------------------------\n";
-            cout << "\tINFORMATION ABOUT ALL PIPES\n";
-            cout << "-----------------------------------------------\n\n";
-
-            EGS.Show(EGS.GetPipes());
-
-            cout << "-----------------------------------------------\n";
-            cout << "\tINFORMATION ABOUT ALL CS\n";
-            cout << "-----------------------------------------------\n\n";
-
-            EGS.Show(EGS.GetCS());
-
-            
-
+            GSS.ShowObjects();
+                    
             break;
         }
         case 4:
         {
-
+            GSS.EditPipe();
 
             break;
         }
         case 5:
         {
-
+            GSS.EditCS();
             break;
         }
         case 6:
         {
-            EGS.Save();
-
-            cout << "Data is saved" << "\n";
+            GSS.Save();
 
             break;
         }
         case 7:
         {
-            EGS.Load();
-
-            cout << "Data is load" << "\n";
+            GSS.Load();
 
             break;
         }
@@ -110,5 +65,7 @@ int main()
         }
     }
 }
+
+
 
 

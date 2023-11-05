@@ -7,17 +7,16 @@ using namespace std;
 istream& operator>>(istream& in, Pipe& p)
 {
 	cout << "Kilometer mark: ";
-	in >> ws;
-	getline(in, p.km_mark);
+	p.km_mark = EnterLine();
 	
-	cout << "Length (1 - 5000 km): ";
-	p.length = GetCorrectNumber(1.0, 5000.0);
+	cout << "Length (0.1 - 5000 km): ";
+	p.length = GetCorrectNumber(0.1, 5000.0);
 	
 	cout << "Diameter (700 - 1400 mm): ";
 	p.diameter = GetCorrectNumber(700, 1400);
 	
-	cout << "Is this pipe in repair? (y/n): ";
-	p.in_repair = (GetCorrectChar() == 'y') ? true : false;
+	cout << "Status (\"0\" - in working condition, \"1\" - in repair): ";
+	p.status = GetCorrectNumber(0, 1);
 
 	return in;
 }
@@ -25,13 +24,14 @@ istream& operator>>(istream& in, Pipe& p)
 
 ostream& operator<<(ostream& out, const Pipe& p)
 {
-	out << "\tInformation about Pipe " << p.id <<
-		": \"" << p.km_mark << "\"\n\n"
-		<< "ID: " << p.id << "\n"
-		<< "Kilometer mark: " << p.km_mark << "\n"
-		<< "Length: " << p.length << " km" << "\n"
-		<< "Diameter: " << p.diameter << " mm" << "\n"
-		<< p.PrintStatus() << "\n";
+	char symbol = 249; // marker
+	out << "Information about Pipe " <<
+		"\"" << p.km_mark << "\":\n"
+		<< symbol << " ID: " << p.id << "\n"
+		<< symbol << " Kilometer mark: " << p.km_mark << "\n"
+		<< symbol << " Length: " << p.length << " km" << "\n"
+		<< symbol << " Diameter: " << p.diameter << " mm" << "\n"
+		<< symbol << " " << p.PrintStatus() << "\n\n";
 
 	return out;
 }
@@ -43,7 +43,9 @@ std::ifstream& operator>>(ifstream& fin, Pipe& p)
 	getline(fin, p.km_mark);
 	fin >> p.length;
 	fin >> p.diameter;
-	fin >> p.in_repair;
+	fin >> p.status;
+	int id = p.id;
+	p.max_id = p.max_id <= id ? p.max_id = ++id : p.max_id;
 	return fin;
 }
 
@@ -53,16 +55,33 @@ std::ofstream& operator<<(ofstream& fout, const Pipe& p)
 		<< p.km_mark << "\n"
 		<< p.length << "\n" 
 		<< p.diameter << "\n"
-		<< p.in_repair << "\n";
+		<< p.status << "\n";
 	return fout;
 }
 
 
 string Pipe::PrintStatus() const
 {
-	return in_repair ? "In repair" : "In Working condition";
+	return status ? "In repair" : "In Working condition";
 
 }
+
+void Pipe::ChangeStatus()
+{
+	status = !status;
+}
+
+void Pipe::ResetMaxID()
+{
+	max_id = 0;
+}
+
+
+std::string Pipe::GetKmMark() const
+{
+	return km_mark;
+}
+
 
 int Pipe::GetId() const
 {
@@ -71,7 +90,6 @@ int Pipe::GetId() const
 
 
 int Pipe::max_id = 0;
-
 
 Pipe::Pipe()
 {

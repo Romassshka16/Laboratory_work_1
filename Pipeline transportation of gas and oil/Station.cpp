@@ -6,8 +6,7 @@ using namespace std;
 std::istream& operator>>(std::istream& in, Station& cs)
 {
 	cout << "Title: ";
-	in >> ws;
-	getline(in, cs.title);
+	cs.title = EnterLine();
 
 	cout << "Number of all workshops (1 - 25): ";
 	cs.all_workshop = GetCorrectNumber(1, 25);
@@ -23,13 +22,14 @@ std::istream& operator>>(std::istream& in, Station& cs)
 
 std::ostream& operator<<(std::ostream& out, const Station& cs)
 {
-	out << "\tInformation about CS " << cs.id
-		<< ": \"" << cs.title << "\"\n\n"
-		<< "ID: " << cs.id << "\n"
-		<< "Title: " << cs.title << "\n"
-		<< "All workshops: " << cs.all_workshop << "\n"
-		<< "Active workshops: " << cs.active_workshop << "\n"
-		<< "Efficiency: " << cs.efficiency * 100 << " %" << "\n";
+	char symbol = 249;
+	out << "Information about CS "
+		<< "\"" << cs.title << "\":\n"
+		<< symbol << "ID: " << cs.id << "\n"
+		<< symbol << "Title: " << cs.title << "\n"
+		<< symbol << "All workshops: " << cs.all_workshop << "\n"
+		<< symbol << "Active workshops: " << cs.active_workshop << "\n"
+		<< symbol << "Efficiency: " << cs.efficiency * 100 << " %" << "\n\n";
 
 	return out;
 }
@@ -42,6 +42,8 @@ std::ifstream& operator>>(std::ifstream& fin, Station& cs)
 	fin >> cs.all_workshop;
 	fin >> cs.active_workshop;
 	fin >> cs.efficiency;
+	int id = cs.id;
+	cs.max_id = cs.max_id <= id ? cs.max_id = ++id : cs.max_id;
 	return fin;
 }
 
@@ -56,12 +58,43 @@ std::ofstream& operator<<(std::ofstream& fout, const Station& cs)
 }
 
 
-int Station::max_id = 0;
+void Station::IncreaseActiveWS()
+{
+	if (active_workshop < all_workshop)
+		++active_workshop;
+}
+
+void Station::DecreaseActiveWS()
+{
+	if (active_workshop > 0)
+		--active_workshop;
+}
+
+void Station::ResetMaxID()
+{
+	max_id = 0;
+}
+
+
+double Station::GetPercentUnused() const
+{
+	return (1 - ((double)active_workshop/double(all_workshop))) * 100;
+}
+
+
+std::string Station::GetTitle() const
+{
+	return title;
+}
+
 
 int Station::GetId() const
 {
 	return id;
 }
+
+int Station::max_id = 0;
+
 
 Station::Station()
 {
