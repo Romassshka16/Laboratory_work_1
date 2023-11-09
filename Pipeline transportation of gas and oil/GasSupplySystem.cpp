@@ -49,7 +49,7 @@ void GasSupplySystem::Save()
 	cout << "Enter the file name: ";
 
 	ofstream fout;
-	fout.open(EnterLine());
+	fout.open("Data/" + EnterLine());
 
 	if (fout) {
 		fout << pipe_objects.size() << " "
@@ -71,13 +71,9 @@ void GasSupplySystem::Save()
 
 void GasSupplySystem::Load()
 {
-	string filename;
 	cout << "Enter the file name: ";
-	cin >> ws;
-	getline(cin, filename);
-
 	ifstream fin;
-	fin.open(filename);
+	fin.open("Data/" + EnterLine());
 	if (fin) {
 		int num_pipe;
 		int num_cs;

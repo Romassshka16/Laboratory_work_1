@@ -16,6 +16,7 @@ string EnterLine()
 	string line;
 	cin >> ws;
 	getline(cin, line);
+	cerr << line << '\n';
 	return line;
 }
 

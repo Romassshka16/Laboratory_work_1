@@ -72,7 +72,7 @@ void Station::DecreaseActiveWS()
 
 void Station::ResetMaxID()
 {
-	max_id = 0;
+	max_id = 1;
 }
 
 
@@ -93,7 +93,7 @@ int Station::GetId() const
 	return id;
 }
 
-int Station::max_id = 0;
+int Station::max_id = 1;
 
 
 Station::Station()

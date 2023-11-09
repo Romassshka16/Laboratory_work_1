@@ -73,7 +73,7 @@ void Pipe::ChangeStatus()
 
 void Pipe::ResetMaxID()
 {
-	max_id = 0;
+	max_id = 1;
 }
 
 
@@ -89,7 +89,7 @@ int Pipe::GetId() const
 }
 
 
-int Pipe::max_id = 0;
+int Pipe::max_id = 1;
 
 Pipe::Pipe()
 {
