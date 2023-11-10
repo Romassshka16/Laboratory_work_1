@@ -2,9 +2,23 @@
 
 using namespace std;
 
+void GasSupplySystem::AddPipe()
+{
+	Pipe p;
+	cin >> p;
+	pipe_objects.insert({ p.GetId(), p });
+}
+
+void GasSupplySystem::AddCS()
+{
+	Station cs;
+	cin >> cs;
+	cs_objects.insert({ cs.GetId(), cs });
+}
+
 void GasSupplySystem::ShowObjects()
 {
-	Menu(2);
+	vector<string> menu = { "Show pipes", "Show stations", "Show all" };
 	const string menu_array[2] =
 	{ "-----------------------------------------------\n"
 	"\tINFORMATION ABOUT ALL PIPES\n"
@@ -12,7 +26,7 @@ void GasSupplySystem::ShowObjects()
 	"-----------------------------------------------\n"
 	"\tINFORMATION ABOUT ALL CS\n" 
 	"-----------------------------------------------\n\n" };
-	switch (GetCorrectNumber(0, 3))
+	switch (ChooseActionMenu(menu, true))
 	{
 	case 1:
 	{
@@ -166,8 +180,10 @@ void EditPipes(unordered_map<int, Pipe>& pipe_objects,
 	unordered_set<int>& id_set)
 {
 	ShowFoundPipes(pipe_objects, id_set);
-	Menu(5);
-	switch (GetCorrectNumber(0, 3))
+	vector<string> menu = { "Change the status to the opposite",
+	"Change the status to the \"In repair\"",
+	"Change the status to the \"In working condition\"" };
+	switch (ChooseActionMenu(menu, true))
 	{
 	case 1:
 	{
@@ -223,20 +239,21 @@ void EditAllPipes(unordered_map<int, Pipe>& pipe_objects)
 	for (auto& [id, pipe] : pipe_objects) {
 		id_set.insert(id);
 	}
-	if (CheckByEmptySet(id_set))
+	if (ObjectsExist(id_set))
 		EditPipes(pipe_objects, id_set);
 }
 
 void EditPackagePipe(unordered_map<int, Pipe>& pipe_objects) {
-	Menu(4);
-	switch (GetCorrectNumber(0, 4))
+	vector<string> menu = { "Search by kilometer mark",
+		"Search by status", "Select pipes", "Edit all pipes" };
+	switch (ChooseActionMenu(menu, true))
 	{
 	case 1:
 	{
 		ShortShowPipes(pipe_objects);
 		cout << "\nEnter the kilometer mark: ";
 		unordered_set id_set = FindByFilter(pipe_objects, CheckByKmMark, EnterLine());
-		if (CheckByEmptySet(id_set))
+		if (ObjectsExist(id_set))
 			EditPipes(pipe_objects, id_set);
 		break;
 	}
@@ -245,7 +262,7 @@ void EditPackagePipe(unordered_map<int, Pipe>& pipe_objects) {
 		ShortShowPipes(pipe_objects);
 		cout << "\nStatus (\"0\"-in working condition, \"1\"-in repair): ";
 		unordered_set id_set = FindByFilter(pipe_objects, ChekByStatus, GetCorrectNumber(0, 1));
-		if (CheckByEmptySet(id_set))
+		if (ObjectsExist(id_set))
 			EditPipeByStatus(pipe_objects, id_set);
 		break;
 	}
@@ -253,7 +270,7 @@ void EditPackagePipe(unordered_map<int, Pipe>& pipe_objects) {
 	{
 		ShortShowPipes(pipe_objects);
 		unordered_set<int> id_set = SelectByIDs(pipe_objects);
-		if (CheckByEmptySet(id_set))
+		if (ObjectsExist(id_set))
 			EditPipes(pipe_objects, id_set);
 		break;
 	}
@@ -284,9 +301,10 @@ void DeletePipe(unordered_map<int, Pipe>& pipe_objects) {
 
 void GasSupplySystem::EditPipe()
 {
-	if (CheckByEmptySystem(pipe_objects)) {
-		Menu(3);
-		switch (GetCorrectNumber(0, 3))
+	if (ObjectsExist(pipe_objects)) {
+		vector<string> menu = { "Edit one pipe",
+		"Edit pipe package" };
+		switch (ChooseActionMenu(menu, true))
 		{
 		case 1:
 		{
@@ -356,8 +374,9 @@ void EditStations(unordered_map<int, Station>& cs_objects,
 	unordered_set<int>& id_set)
 {
 	ShowFoundStations(cs_objects, id_set);
-	Menu(8);
-	switch (GetCorrectNumber(0, 3))
+	vector<string> menu = { "Increase by 1 active workshop",
+	"Decrease by 1 active workshop" };
+	switch (ChooseActionMenu(menu, true))
 	{
 	case 1:
 	{
@@ -390,21 +409,23 @@ void EditAllStations(unordered_map<int, Station>& cs_objects)
 	for (auto& [id, stations] : cs_objects) {
 		id_set.insert(id);
 	}
-	if (CheckByEmptySet(id_set))
+	if (ObjectsExist(id_set))
 		EditStations(cs_objects, id_set);
 }
 
 void EditPackageStation(unordered_map<int, Station>& cs_objects)
 {
-	Menu(7);
-	switch (GetCorrectNumber(0, 4))
+	vector<string> menu = { "Search by title",
+	"Search by percent unused workshops",
+	"Select stations", "Edit all stations" };
+	switch (ChooseActionMenu(menu, true))
 	{
 	case 1:
 	{
 		ShortShowStations(cs_objects);
 		cout << "\nEnter the title: ";
 		unordered_set id_set = FindByFilter(cs_objects, CheckByTitle, EnterLine());
-		if (CheckByEmptySet(id_set))
+		if (ObjectsExist(id_set))
 			EditStations(cs_objects, id_set);
 		break;
 	}
@@ -413,7 +434,7 @@ void EditPackageStation(unordered_map<int, Station>& cs_objects)
 		ShortShowStations(cs_objects);
 		cout << "\nPercent of unused workshops: ";
 		unordered_set id_set = FindByFilter(cs_objects, CheckByWorkshop, GetCorrectNumber(0.0, 100.0));
-		if (CheckByEmptySet(id_set))
+		if (ObjectsExist(id_set))
 			EditStations(cs_objects, id_set);
 		break;
 	}
@@ -421,7 +442,7 @@ void EditPackageStation(unordered_map<int, Station>& cs_objects)
 	{
 		ShortShowStations(cs_objects);
 		unordered_set<int> id_set = SelectByIDs(cs_objects);
-		if (CheckByEmptySet(id_set))
+		if (ObjectsExist(id_set))
 			EditStations(cs_objects, id_set);
 		break;
 	}
@@ -453,10 +474,11 @@ void DeleteStation(unordered_map<int, Station>& cs_objects) {
 
 void GasSupplySystem::EditCS()
 {
-	if (CheckByEmptySystem(cs_objects))
+	if (ObjectsExist(cs_objects))
 	{
-		Menu(6);
-		switch (GetCorrectNumber(0, 3))
+		vector<string>menu = { "Edit one station",
+		"Edit station package" };
+		switch (ChooseActionMenu(menu, true))
 		{
 		case 1:
 		{

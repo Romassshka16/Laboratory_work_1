@@ -75,24 +75,21 @@ std::unordered_set<int> SelectByIDs(std::unordered_map<int, T>& objects)
     do {
         std::cout << "Enter the id of pipe (\"0\" - end): ";
         id = GetCorrectNumber(0, INT_MAX);
-        if (objects.count(id) != 0)
+        if (objects.contains(id))
             id_set.insert(id);
     } while (id != 0);
     return id_set;
 }
 
 template <typename T>
-bool CheckByEmptySystem(const std::unordered_map<int, T>& pipe_objects)
+bool ObjectsExist(const T& objects)
 {
-    if (pipe_objects.size() == 0) {
+    if (objects.size() == 0) {
         std::cout << "Not objects!\n";
         return false;
     }
     return true;
 }
 
-
-void RedirectOstream();
-bool CheckByEmptySet(const std::unordered_set<int>& id_set);
 std::string EnterLine();
-void Menu(int param);
+int ChooseActionMenu(std::vector<std::string>& menu, bool with_exit);

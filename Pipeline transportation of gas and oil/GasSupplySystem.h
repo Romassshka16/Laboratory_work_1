@@ -12,8 +12,8 @@
 class GasSupplySystem
 {	
 public:
-	template <typename T> 
-	void Add(std::unordered_map<int, T>& objects);
+	void AddPipe();
+	void AddCS();
 
 	template <typename T> 
 	void Show(const std::unordered_map<int, T>& objects);
@@ -29,20 +29,12 @@ public:
 	std::unordered_map<int, Pipe>& GetPipes();
 	std::unordered_map<int, Station>& GetCS();
 
-
 private:
 	std::unordered_map<int, Pipe> pipe_objects;
 	std::unordered_map<int, Station> cs_objects;
 
 };
 
-template<typename T>
-inline void GasSupplySystem::Add(std::unordered_map<int, T>& objects)
-{
-	T object;
-	std::cin >> object;
-	objects.insert({ object.GetId(), object });
-}
 
 template<typename T>
 inline void GasSupplySystem::Show(const std::unordered_map<int, T>& objects)
