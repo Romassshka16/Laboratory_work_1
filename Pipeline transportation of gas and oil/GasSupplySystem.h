@@ -15,38 +15,38 @@ public:
 	void AddPipe();
 	void AddCS();
 
-	template <typename T> 
-	void Show(const std::unordered_map<int, T>& objects);
-	void ShowObjects();
+	void ShowPipes();
+	void ShowCSs();
+	void ShortShowPipes();
+	void ShortShowCS();
+	void ShowFoundPipes(std::unordered_set<int>& id_pipes);
+	void ShowFoundCS(std::unordered_set<int>& id_cs);
 
-	void Save();
-	void Load();
+	void Save(std::string filename);
+	void Load(std::string filename);
 	void ClearSystem();
-	void EditPipe();
-	void EditCS();
-	
-	
-	std::unordered_map<int, Pipe>& GetPipes();
-	std::unordered_map<int, Station>& GetCS();
+
+	std::unordered_set<int> SearchPipesByKmMark(std::string km_mark);
+	std::unordered_set<int> SearchPipesByStatus(int status);
+	std::unordered_set<int> SearchPipesByIDs();
+
+	void EditOnePipe(int id_pipe);
+	void ChangeStatusToOpposite(std::unordered_set<int>& id_pipes);
+	void ChangeStatusToRepair(std::unordered_set<int>& id_pipes);
+	void ChangeStatusToWork(std::unordered_set<int>& id_pipes);
+	void EditAllPipes();
+
+	void EditOneCS(int id_cs, int action);
+	void EditCSPackage();
+	void EditAllCSs();
+
+	bool PipeExist(int id_pipe);
+	bool StationExist(int id_cs);
+	bool IsPipeObjectsEmpty();
+	bool IsCSObjectsEmpty();
 
 private:
 	std::unordered_map<int, Pipe> pipe_objects;
 	std::unordered_map<int, Station> cs_objects;
-
 };
-
-
-template<typename T>
-inline void GasSupplySystem::Show(const std::unordered_map<int, T>& objects)
-{
-	if (objects.size() != 0) {
-		for (const auto& [key, object] : objects)
-		{
-			std::cout << object;
-		}
-	}
-	else
-		std::cout << "Not objects!\n\n";
-}
-
 

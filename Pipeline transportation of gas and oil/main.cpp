@@ -5,6 +5,7 @@
 #include <fstream>
 #include "GasSupplySystem.h"
 #include "Addition.h"
+#include "MainMenu.h"
 
 
 using namespace std;
@@ -34,29 +35,27 @@ int StartProgram(GasSupplySystem& GSS) {
         }
         case 3:
         {
-            GSS.ShowObjects();
-
+            MenuShowObjects(GSS);
             break;
         }
         case 4:
         {
-            GSS.EditPipe();
-
+            MenuEditPipes(GSS);
             break;
         }
         case 5:
-        {
-            GSS.EditCS();
+        {   
+            MenuEditCS(GSS);s
             break;
         }
         case 6:
         {
-            GSS.Save();
+            MenuSave(GSS);
             break;
         }
         case 7:
         {
-            GSS.Load();
+            MenuLoad(GSS);
             break;
         }
         case 0:
