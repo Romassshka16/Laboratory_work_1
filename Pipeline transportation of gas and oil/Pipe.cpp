@@ -15,7 +15,7 @@ istream& operator>>(istream& in, Pipe& p)
 	cout << "Diameter (700 - 1400 mm): ";
 	p.diameter = GetCorrectNumber(700, 1400);
 	
-	cout << "Status (\"0\" - in working condition, \"1\" - in repair): ";
+	cout << "Status (\"1\" - in repair, \"0\" - in working condition): ";
 	p.status = GetCorrectNumber(0, 1);
 
 	return in;

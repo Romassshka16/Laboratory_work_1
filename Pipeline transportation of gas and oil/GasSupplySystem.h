@@ -16,7 +16,7 @@ public:
 	void AddCS();
 
 	void ShowPipes();
-	void ShowCSs();
+	void ShowCS();
 	void ShortShowPipes();
 	void ShortShowCS();
 	void ShowFoundPipes(std::unordered_set<int>& id_pipes);
@@ -36,12 +36,17 @@ public:
 	void ChangeStatusToWork(std::unordered_set<int>& id_pipes);
 	void EditAllPipes();
 
-	void EditOneCS(int id_cs, int action);
-	void EditCSPackage();
-	void EditAllCSs();
+	std::unordered_set<int> SearchCSByTitle(std::string title);
+	std::unordered_set<int> SearchCSByWorkshops(double percent);
+	std::unordered_set<int> SearchCSByIDs();
 
-	bool PipeExist(int id_pipe);
-	bool StationExist(int id_cs);
+	void EditOneCS(int id_cs);
+	void EditCSPackage(std::unordered_set<int>& id_cs, int action);
+	void EditAllCS(int action);
+
+	void DeletePipe(int id_pipe);
+	void DeleteCS(int id_cs);
+
 	bool IsPipeObjectsEmpty();
 	bool IsCSObjectsEmpty();
 
