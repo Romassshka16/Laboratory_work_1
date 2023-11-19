@@ -7,10 +7,8 @@
 #include "Addition.h"
 #include "MainMenu.h"
 
-
 using namespace std;
 using namespace chrono;
-
 
 int StartProgram(GasSupplySystem& GSS) {
 

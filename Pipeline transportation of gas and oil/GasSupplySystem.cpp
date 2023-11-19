@@ -30,7 +30,7 @@ void GasSupplySystem::ShowPipes()
 
 void GasSupplySystem::ShowCS()
 {
-	if (cs_objects.size() != 0) {
+	if (ObjectsExist(cs_objects)) {
 		for (const auto& [id, station] : cs_objects)
 		{
 			cout << station;
@@ -121,7 +121,7 @@ void GasSupplySystem::Load(string filename)
 			fin >> cs;
 			cs_objects.insert({ cs.GetId(), cs });
 		};
-		cout << "Data is load!" << "\n";
+		cout << "Data is loaded!" << "\n";
 	}
 	else
 		cout << "Error in the opening file!\n";
@@ -245,7 +245,7 @@ void GasSupplySystem::EditOneCS(int id_cs)
 		cout << "\"1\" - Increase,\"0\" - Decrease: ";
 		GetCorrectNumber(0, 1) ? cs_objects.at(id_cs).IncreaseActiveWS() :
 			cs_objects.at(id_cs).DecreaseActiveWS();
-		cout << "Number of WS is changed\n";// << (action ? "increased" : "decreased") << "\n";
+		cout << "Number of WS is changed\n";
 	}
 	else
 		cout << "Station with entered ID not found!\n";

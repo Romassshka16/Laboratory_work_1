@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <algorithm>
 
 
 class Pipe
@@ -27,6 +28,7 @@ private:
 	static int max_id;
 	std::string km_mark;
 	float length;
+	static int pipe_diameters[];
 	int diameter;
 	int id;
 

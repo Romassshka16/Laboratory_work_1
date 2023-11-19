@@ -3,6 +3,9 @@
 
 using namespace std;
 
+int Pipe::max_id = 1;
+int Pipe::pipe_diameters[] = {500, 700, 1000, 1400};
+
 
 istream& operator>>(istream& in, Pipe& p)
 {
@@ -12,8 +15,13 @@ istream& operator>>(istream& in, Pipe& p)
 	cout << "Length (0.1 - 5000 km): ";
 	p.length = GetCorrectNumber(0.1, 5000.0);
 	
-	cout << "Diameter (700 - 1400 mm): ";
-	p.diameter = GetCorrectNumber(700, 1400);
+	cout << "Diameter (500, 700, 1000, 1400 mm): ";
+	p.diameter = GetCorrectNumber(1, INT_MAX);
+	while (!count(begin(p.pipe_diameters), end(p.pipe_diameters), p.diameter))
+	{
+		cout << "Enter the correct diameter: ";
+		p.diameter = GetCorrectNumber(1, INT_MAX);
+	}
 	
 	cout << "Status (\"1\" - in repair, \"0\" - in working condition): ";
 	p.status = GetCorrectNumber(0, 1);
@@ -87,9 +95,6 @@ int Pipe::GetId() const
 {
 	return id;
 }
-
-
-int Pipe::max_id = 1;
 
 Pipe::Pipe()
 {

@@ -162,7 +162,7 @@ void MenuEditPipePackage(GasSupplySystem& gss)
 	}
 
 	if (FoundPipesExist(gss, found_pipes)){
-		if (found_pipes.size() > 1 and with_select)
+		if (with_select && found_pipes.size() > 1)
 			MenuSelectionPipesByIDs(gss, found_pipes, for_status);
 		else
 			MenuChangeStatusToOpposite(gss, found_pipes);
@@ -278,7 +278,7 @@ void MenuEditCSPackage(GasSupplySystem& gss)
 	}
 
 	if (FoundCSExist(gss, found_stations)) {
-		if (found_stations.size() > 1 and with_select)
+		if (with_select && found_stations.size() > 1)
 			MenuSelectionCSByIDs(gss, found_stations);
 
 		else
