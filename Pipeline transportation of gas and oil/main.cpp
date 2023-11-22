@@ -15,9 +15,8 @@ int StartProgram(GasSupplySystem& GSS) {
     while (1)
     {
         vector<string> menu = { "Add Pipe", "Add CS",
-            "Show Pipes and Compressor Stations",
-            "Edit Pipe", "Edit Station", "Delete",
-            "Save", "Load" };
+            "Show", "Edit Pipe", "Edit Station", "Connect Stations",
+            "Delete", "Save", "Load" };
         switch (ChooseActionMenu(menu, true))
         {
         case 1:
@@ -48,15 +47,20 @@ int StartProgram(GasSupplySystem& GSS) {
         }
         case 6:
         {   
-            MenuDelete(GSS);
+            MenuConnectingStations(GSS);
             break;
         }
         case 7:
         {
-            MenuSave(GSS);
+            MenuDelete(GSS);
             break;
         }
         case 8:
+        {
+            MenuSave(GSS);
+            break;
+        }
+        case 9:
         {
             MenuLoad(GSS);
             break;

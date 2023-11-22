@@ -4,13 +4,16 @@ using namespace std;
 
 void MenuShowObjects(GasSupplySystem& gss)
 {
-	vector<string> menu = { "Show pipes", "Show stations", "Show all" };
-	const string menu_information[2] =
+	vector<string> menu = { "Show pipes", "Show stations", "Show connections", "Show all" };
+	const string menu_information[3] =
 	{ "-----------------------------------------------\n"
 	"\tINFORMATION ABOUT ALL PIPES\n"
 	"-----------------------------------------------\n\n",
 	"-----------------------------------------------\n"
 	"\tINFORMATION ABOUT ALL CS\n"
+	"-----------------------------------------------\n\n",
+	"-----------------------------------------------\n"
+	"\tINFORMATION ABOUT CONNECTIONS\n"
 	"-----------------------------------------------\n\n" };
 	switch (ChooseActionMenu(menu, true))
 	{
@@ -28,10 +31,18 @@ void MenuShowObjects(GasSupplySystem& gss)
 	}
 	case 3:
 	{
+		cout << menu_information[2];
+		gss.ShowConnections();
+		break;
+	}
+	case 4:
+	{
 		cout << menu_information[0];
 		gss.ShowPipes();
 		cout << menu_information[1];
 		gss.ShowCS();
+		cout << menu_information[2];
+		gss.ShowConnections();
 		break;
 	}
 	case 0:
@@ -55,10 +66,15 @@ void MenuLoad(GasSupplySystem& gss)
 	gss.Load(EnterLine());
 }
 
+int EnterPipesID()
+{
+	cout << "Enter ID of pipe: ";
+	return GetCorrectNumber(1, INT_MAX);
+}
+
 bool FoundPipesExist(GasSupplySystem& gss, unordered_set<int> found_pipes)
 {
 	if (ObjectsExist(found_pipes)) {
-		cout << "\n~FOUND PIPES~\n\n";
 		gss.ShowFoundPipes(found_pipes);
 		return true;
 	}
@@ -175,15 +191,12 @@ void MenuEditPipes(GasSupplySystem& gss)
 	if (!gss.IsPipeObjectsEmpty()){
 		vector<string> menu = { "Edit one pipe",
 			"Edit pipe package", "Edit all pipes"};
-		cout << "\n~ALL PIPES~\n\n";
 		gss.ShortShowPipes();
 		switch (ChooseActionMenu(menu, true))
 		{
 		case 1:
 		{
-			cout << "Enter ID of pipe: ";
-			/*if (gss.PipeExist())*/
-			gss.EditOnePipe(GetCorrectNumber(1, INT_MAX));
+			gss.EditOnePipe(EnterPipesID());
 			break;
 		}
 		case 2:
@@ -194,7 +207,6 @@ void MenuEditPipes(GasSupplySystem& gss)
 		case 3:
 		{
 			gss.EditAllPipes();
-			cout << "Statuses of all pipes are changed!\n";
 			break;
 		}
 		case 0:
@@ -205,14 +217,17 @@ void MenuEditPipes(GasSupplySystem& gss)
 			break;
 		}
 	}
-	else
-		cout << "System has not pipes!\n";
+}
+
+int EnterStationsID()
+{
+	cout << "Enter ID of station: ";
+	return GetCorrectNumber(0, INT_MAX);
 }
 
 bool FoundCSExist(GasSupplySystem& gss, unordered_set<int> found_stations)
 {
 	if (ObjectsExist(found_stations)) {
-		cout << "\n~FOUND STATIONS~\n\n";
 		gss.ShowFoundCS(found_stations);
 		return true;
 	}
@@ -292,14 +307,12 @@ void MenuEditCS(GasSupplySystem& gss)
 	if (!gss.IsCSObjectsEmpty()) {
 		vector<string> menu = { "Edit one station",
 			"Edit station package", "Edit all stations" };
-		cout << "\n~ALL STATIONS~\n\n";
 		gss.ShortShowCS();
 		switch (ChooseActionMenu(menu, true))
 		{
 		case 1:
 		{
-			cout << "Enter ID of station: ";
-			gss.EditOneCS(GetCorrectNumber(1, INT_MAX));
+			gss.EditOneCS(EnterStationsID());
 			break;
 		}
 		case 2:
@@ -312,7 +325,6 @@ void MenuEditCS(GasSupplySystem& gss)
 
 			cout << "\"1\" - Increase,\"0\" - Decrease: ";
 			gss.EditAllCS(GetCorrectNumber(0, 1));
-			cout << "The number of unused workshops is changed!\n";
 			break;
 		}
 		case 0:
@@ -323,8 +335,6 @@ void MenuEditCS(GasSupplySystem& gss)
 			break;
 		}
 	}
-	else
-		cout << "System has not stations!\n";
 }
 
 void MenuDelete(GasSupplySystem& gss)
@@ -335,25 +345,91 @@ void MenuDelete(GasSupplySystem& gss)
 	case 1:
 	{
 		if (!gss.IsPipeObjectsEmpty()) {
-			cout << "Enter id of pipe: ";
-			gss.DeletePipe(GetCorrectNumber(1, INT_MAX));
+			gss.DeletePipe(EnterPipesID());
 		}
-		else
-			cout << "System has not pipes!\n";
 		break;
 	}
 	case 2:
 	{
 		if (!gss.IsCSObjectsEmpty()) {
-			cout << "Enter id of station: ";
-			gss.DeleteCS(GetCorrectNumber(1, INT_MAX));
+			gss.DeleteCS(EnterStationsID());
 		}
-		else
-			cout << "System has not stations!\n";
+		break;
+	}
+	case 0:
+	{
 		break;
 	}
 	default:
 		break;
+	}
+}
+
+void EnteringIDs(int& id_out, int& id_in)
+{
+	cout << "Enter id first station: ";
+	id_out = GetCorrectNumber(1, INT_MAX);
+	cout << "Enter id second station: ";
+	id_in = GetCorrectNumber(1, INT_MAX);
+
+	while (id_out == id_in) {
+		cout << "IDs match! Enter IDs again\n";
+		cout << "Enter id first station: ";
+		id_out = GetCorrectNumber(1, INT_MAX);
+		cout << "Enter id second station: ";
+		id_in = GetCorrectNumber(1, INT_MAX);
+	}
+}
+
+void MenuConnectingStations(GasSupplySystem& gss)
+{
+	vector<string> menu = { "Connect stations", "Topological sorting" };
+	if (!gss.IsCSObjectsEmpty() && !gss.IsPipeObjectsEmpty()) {
+		switch (ChooseActionMenu(menu, true))
+		{
+		case 1:
+		{
+			gss.ShortShowPipes();
+			gss.ShortShowCS();
+			gss.ShowConnections();
+			int id_out;
+			int id_in;
+			EnteringIDs(id_out, id_in);
+			int diameter = Pipe::EnterCorrectDiameter();
+			unordered_set<int> found_pipes = gss.SearchFreePipesByDiameters(diameter);
+
+			if (ObjectsExist(found_pipes)) {
+				gss.ShowFoundPipes(found_pipes);
+				int id_pipe = EnterPipesID();
+				if (found_pipes.contains(id_pipe))
+					gss.ConnectStations(id_out, id_in, id_pipe);
+				else
+					cout << "Pipe with this id is not in the found pipes!\n";
+			}
+			else {
+				cout << "There are no free pipes with this id!\n" <<
+					"Want to create (\"1\" - yes, \"0\" - no)?: ";
+				if (GetCorrectNumber(0, 1)) {
+					Pipe p = gss.AddPipe(diameter);
+					gss.ConnectStations(id_out, id_in, p.GetId());
+				}
+
+			}
+			break;
+		}
+		case 2:
+		{
+			gss.TopologicalSorting();
+			break;
+		}
+		case 0:
+		{
+
+			break;
+		}
+		default:
+			break;
+		}
 	}
 }
 

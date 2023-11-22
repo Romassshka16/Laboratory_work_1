@@ -6,67 +6,16 @@ using namespace std;
 int Pipe::max_id = 1;
 int Pipe::pipe_diameters[] = {500, 700, 1000, 1400};
 
-
-istream& operator>>(istream& in, Pipe& p)
+int Pipe::EnterCorrectDiameter()
 {
-	cout << "Kilometer mark: ";
-	p.km_mark = EnterLine();
-	
-	cout << "Length (0.1 - 5000 km): ";
-	p.length = GetCorrectNumber(0.1, 5000.0);
-	
 	cout << "Diameter (500, 700, 1000, 1400 mm): ";
-	p.diameter = GetCorrectNumber(1, INT_MAX);
-	while (!count(begin(p.pipe_diameters), end(p.pipe_diameters), p.diameter))
-	{
-		cout << "Enter the correct diameter: ";
-		p.diameter = GetCorrectNumber(1, INT_MAX);
+	int diameter = GetCorrectNumber(1, INT_MAX);
+	while (!count(begin(pipe_diameters), end(pipe_diameters), diameter)) {
+		cout << "Enter the correct diameter (500, 700, 1000, 1400 mm): ";
+		diameter = GetCorrectNumber(1, INT_MAX);
 	}
-	
-	cout << "Status (\"1\" - in repair, \"0\" - in working condition): ";
-	p.status = GetCorrectNumber(0, 1);
-
-	return in;
+	return diameter;
 }
-
-
-ostream& operator<<(ostream& out, const Pipe& p)
-{
-	char symbol = 249; // marker
-	out << "Information about Pipe " <<
-		"\"" << p.km_mark << "\":\n"
-		<< symbol << " ID: " << p.id << "\n"
-		<< symbol << " Kilometer mark: " << p.km_mark << "\n"
-		<< symbol << " Length: " << p.length << " km" << "\n"
-		<< symbol << " Diameter: " << p.diameter << " mm" << "\n"
-		<< symbol << " " << p.PrintStatus() << "\n\n";
-
-	return out;
-}
-
-std::ifstream& operator>>(ifstream& fin, Pipe& p)
-{
-	fin >> p.id;
-	fin >> ws;
-	getline(fin, p.km_mark);
-	fin >> p.length;
-	fin >> p.diameter;
-	fin >> p.status;
-	int id = p.id;
-	p.max_id = p.max_id <= id ? p.max_id = ++id : p.max_id;
-	return fin;
-}
-
-std::ofstream& operator<<(ofstream& fout, const Pipe& p)
-{
-	fout << p.id << "\n"
-		<< p.km_mark << "\n"
-		<< p.length << "\n" 
-		<< p.diameter << "\n"
-		<< p.status << "\n";
-	return fout;
-}
-
 
 string Pipe::PrintStatus() const
 {
@@ -84,19 +33,96 @@ void Pipe::ResetMaxID()
 	max_id = 1;
 }
 
-
 std::string Pipe::GetKmMark() const
 {
 	return km_mark;
 }
 
+int Pipe::GetDiameter() const
+{
+	return diameter;
+}
 
 int Pipe::GetId() const
 {
 	return id;
 }
 
+void Pipe::SetDiameter(int d)
+{
+	diameter = d;
+}
+
 Pipe::Pipe()
 {
 	id = max_id++;
+}
+
+//istream& operator>>(istream& in, Pipe& p)
+//{
+//
+//	cout << "Kilometer mark: ";
+//	p.km_mark = EnterLine();
+//
+//	cout << "Length (0.1 - 5000 km): ";
+//	p.length = GetCorrectNumber(0.1, 5000.0);
+//
+//	p.diameter = p.EnterCorrectDiameter();
+//
+//	cout << "Status (\"1\" - in repair, \"0\" - in working condition): ";
+//	p.status = GetCorrectNumber(0, 1);
+//
+//	return in;
+//}
+
+void InitPipe(Pipe& p, bool with_diameter)
+{
+	cout << "Kilometer mark: ";
+	p.km_mark = EnterLine();
+
+	cout << "Length (0.1 - 5000 km): ";
+	p.length = GetCorrectNumber(0.1, 5000.0);
+
+	if (with_diameter)
+		p.diameter = p.EnterCorrectDiameter();
+
+	cout << "Status (\"1\" - in repair, \"0\" - in working condition): ";
+	p.status = GetCorrectNumber(0, 1);
+}
+
+ostream& operator<<(ostream& out, const Pipe& p)
+{
+	char symbol = 249; // marker
+	out << "Information about Pipe " <<
+		"\"" << p.km_mark << "\":\n"
+		<< symbol << " ID: " << p.id << "\n"
+		<< symbol << " Kilometer mark: " << p.km_mark << "\n"
+		<< symbol << " Length: " << p.length << " km" << "\n"
+		<< symbol << " Diameter: " << p.diameter << " mm" << "\n"
+		<< symbol << " " << p.PrintStatus() << "\n\n";
+
+	return out;
+}
+
+ifstream& operator>>(ifstream& fin, Pipe& p)
+{
+	fin >> p.id;
+	fin >> ws;
+	getline(fin, p.km_mark);
+	fin >> p.length;
+	fin >> p.diameter;
+	fin >> p.status;
+	int id = p.id;
+	p.max_id = p.max_id <= id ? p.max_id = ++id : p.max_id;
+	return fin;
+}
+
+ofstream& operator<<(ofstream& fout, const Pipe& p)
+{
+	fout << p.id << "\n"
+		<< p.km_mark << "\n"
+		<< p.length << "\n"
+		<< p.diameter << "\n"
+		<< p.status << "\n";
+	return fout;
 }

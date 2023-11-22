@@ -14,3 +14,4 @@ void MenuLoad(GasSupplySystem& gss);
 void MenuEditPipes(GasSupplySystem& gss);
 void MenuEditCS(GasSupplySystem& gss);
 void MenuDelete(GasSupplySystem& gss);
+void MenuConnectingStations(GasSupplySystem& gss);
