@@ -9,6 +9,7 @@
 #include "Pipe.h"
 #include "Station.h"
 #include "Addition.h"
+#include "Graph.h"
 
 struct Edge
 {
@@ -62,7 +63,7 @@ public:
 	void DeleteCS(int id_cs);
 
 	void ConnectStations(int id_out, int id_in, int id_pipe);
-	std::vector<std::vector<int>> InitGraph();
+	void DeleteConnection(int id_pipe);
 	std::vector<int> TopologicalSorting();
 
 	bool IsPipeObjectsEmpty();

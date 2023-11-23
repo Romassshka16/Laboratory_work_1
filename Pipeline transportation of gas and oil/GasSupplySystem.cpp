@@ -30,15 +30,14 @@ bool CheckByWorkshops(const Station& cs, double param)
 void GasSupplySystem::AddPipe()
 {
 	Pipe p;
-	InitPipe(p, true);
+	p.InitPipe();
 	pipe_objects.insert({ p.GetId(), p });
 }
 
 Pipe GasSupplySystem::AddPipe(int diameter)
 {
 	Pipe p;
-	p.SetDiameter(diameter);
-	InitPipe(p, false);
+	p.InitPipe(diameter);
 	pipe_objects.insert({ p.GetId(), p });
 	return p;
 }
@@ -375,64 +374,23 @@ void GasSupplySystem::ConnectStations(int id_out, int id_in, int id_pipe)
 		cout << "Stations with this IDs not found\n";
 }
 
-vector<vector<int>> GasSupplySystem::InitGraph()
+void GasSupplySystem::DeleteConnection(int id_pipe)
 {
-	vector<vector<int>> graph(cs_objects.size());
-	vector<int> row(cs_objects.size(), 0);
-
-	for (int y = 0; y < cs_objects.size(); y++)
-		graph[y] = row;
-
-	map<int, int> stations;
-	for (auto& [id, cs] : cs_objects)
-		stations.insert({ cs.GetId(), 0 });
-
-	int i = 0;
-	for (auto& [id_cs, value] : stations)
-		stations[id_cs] = i++;
-
-	for (auto& [id_pipe, edge] : connections)
-		graph[stations.at(edge.id_out)][stations.at(edge.id_in)] = 1;
-
-	return graph;
-}
-
-void DFS(vector<vector<int>>& graph, vector<bool>& visited,
-	int vertex, stack<int>& result)
-{
-	visited[vertex] = true;
-	int neighbor = 0;
-	for (int adjacency : graph[vertex]) {
-		if (!visited[neighbor] && adjacency == 1)
-			DFS(graph, visited, neighbor, result);
-		neighbor++;
+	if (connections.contains(id_pipe)) {
+		connections.erase(id_pipe);
+		cout << "Connection was deleted\n";
 	}
-
-	result.push(vertex);
+	else
+		cout << "Connection not found!\n";
 }
 
 vector<int> GasSupplySystem::TopologicalSorting()
 {
-	vector<vector<int>> graph = InitGraph();
-	vector<bool> visited(cs_objects.size(), false);
-	stack<int> result_dfs;
+	Graph graph(cs_objects, connections);
 	vector<int> result;
-
-	for (int vertex = 0; vertex < cs_objects.size(); vertex++) {
-		//visited[vertex] = false;
-		if (!visited[vertex])
-			DFS(graph, visited, vertex, result_dfs);
-	}
-
-	while (!result_dfs.empty()) {
-		result.push_back(result_dfs.top());
-		result_dfs.pop();
-	}
-	reverse(result.begin(), result.end());
-
-	for (int i = 0; i < cs_objects.size(); i++)
-		cout << result[i] << endl;
-
+	result.reserve(cs_objects.size());
+	if (graph.isDAG())
+		result = graph.TopologicalSorting();
 	return result;
 }
 

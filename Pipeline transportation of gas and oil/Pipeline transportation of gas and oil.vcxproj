@@ -131,6 +131,7 @@
   <ItemGroup>
     <ClCompile Include="Addition.cpp" />
     <ClCompile Include="GasSupplySystem.cpp" />
+    <ClCompile Include="Graph.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainMenu.cpp" />
     <ClCompile Include="Pipe.cpp" />
@@ -139,6 +140,7 @@
   <ItemGroup>
     <ClInclude Include="Addition.h" />
     <ClInclude Include="GasSupplySystem.h" />
+    <ClInclude Include="Graph.h" />
     <ClInclude Include="MainMenu.h" />
     <ClInclude Include="Pipe.h" />
     <ClInclude Include="Station.h" />

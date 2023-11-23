@@ -24,7 +24,7 @@ public:
 
 	Pipe();
 
-	friend void InitPipe(Pipe& p, bool with_diameter);
+	void InitPipe(int diam = 0);
 	//friend std::istream& operator >> (std::istream& in, Pipe& p);
 	friend std::ostream& operator << (std::ostream& out, const Pipe& p);
 

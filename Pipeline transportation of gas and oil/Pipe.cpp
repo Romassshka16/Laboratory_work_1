@@ -75,19 +75,21 @@ Pipe::Pipe()
 //	return in;
 //}
 
-void InitPipe(Pipe& p, bool with_diameter)
+void Pipe::InitPipe(int diam)
 {
 	cout << "Kilometer mark: ";
-	p.km_mark = EnterLine();
+	km_mark = EnterLine();
 
 	cout << "Length (0.1 - 5000 km): ";
-	p.length = GetCorrectNumber(0.1, 5000.0);
+	length = GetCorrectNumber(0.1, 5000.0);
 
-	if (with_diameter)
-		p.diameter = p.EnterCorrectDiameter();
+	if (!diam)
+		diameter = EnterCorrectDiameter();
+	else
+		diameter = diam;
 
 	cout << "Status (\"1\" - in repair, \"0\" - in working condition): ";
-	p.status = GetCorrectNumber(0, 1);
+	status = GetCorrectNumber(0, 1);
 }
 
 ostream& operator<<(ostream& out, const Pipe& p)
