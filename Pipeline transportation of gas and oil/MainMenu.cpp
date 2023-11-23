@@ -337,6 +337,36 @@ void MenuEditCS(GasSupplySystem& gss)
 	}
 }
 
+void MenuDeletePipe(GasSupplySystem& gss)
+{
+	if (!gss.IsPipeObjectsEmpty()) {
+		int id_pipe = EnterPipesID();
+		if (gss.IsPipeConnected(id_pipe)) {
+			cout << "The pipe is part of the graph.\n"
+				<< "Do you want to delete? (\"1\" - yes, \"0\" - no): ";
+			if (GetCorrectNumber(0, 1))
+				gss.DeletePipe(id_pipe);
+		}
+		else
+			gss.DeletePipe(id_pipe);
+	}
+}
+
+void MenuDeleteCS(GasSupplySystem& gss)
+{
+	if (!gss.IsCSObjectsEmpty()) {
+		int id_cs = EnterStationsID();
+		if (gss.IsCSConnected(id_cs)) {
+			cout << "The station is part of the graph.\n"
+				<< "Do you want to delete? (\"1\" - yes, \"0\" - no): ";
+			if (GetCorrectNumber(0, 1))
+				gss.DeleteCS(id_cs);
+		}
+		else
+			gss.DeleteCS(id_cs);
+	}
+}
+
 void MenuDelete(GasSupplySystem& gss)
 {
 	vector<string> menu = { "Delete pipe", "Delete station", "Delete connection"};
@@ -344,16 +374,12 @@ void MenuDelete(GasSupplySystem& gss)
 	{
 	case 1:
 	{
-		if (!gss.IsPipeObjectsEmpty()) {
-			gss.DeletePipe(EnterPipesID());
-		}
+		MenuDeletePipe(gss);
 		break;
 	}
 	case 2:
 	{
-		if (!gss.IsCSObjectsEmpty()) {
-			gss.DeleteCS(EnterStationsID());
-		}
+		MenuDeleteCS(gss);
 		break;
 	}
 	case 3:
@@ -394,26 +420,31 @@ void MenuConnectStations(GasSupplySystem& gss)
 	int id_out;
 	int id_in;
 	EnteringIDs(id_out, id_in);
-	int diameter = Pipe::EnterCorrectDiameter();
-	unordered_set<int> found_pipes = gss.SearchFreePipesByDiameters(diameter);
 
-	if (ObjectsExist(found_pipes)) {
-		gss.ShowFoundPipes(found_pipes);
-		int id_pipe = EnterPipesID();
-		if (found_pipes.contains(id_pipe))
-			gss.ConnectStations(id_out, id_in, id_pipe);
-		else
-			cout << "Pipe with this id is not in the found pipes!\n";
-	}
-	else {
-		cout << "There are no free pipes with this diameter!\n" <<
-			"Want to create (\"1\" - yes, \"0\" - no)?: ";
-		if (GetCorrectNumber(0, 1)) {
-			Pipe p = gss.AddPipe(diameter);
-			gss.ConnectStations(id_out, id_in, p.GetId());
+	if (gss.CSExist(id_in) && gss.CSExist(id_out)) {
+		int diameter = Pipe::EnterCorrectDiameter();
+		unordered_set<int> found_pipes = gss.SearchFreePipesByDiameters(diameter);
+
+		if (ObjectsExist(found_pipes)) {
+			gss.ShowFoundPipes(found_pipes);
+			int id_pipe = EnterPipesID();
+			if (found_pipes.contains(id_pipe))
+				gss.ConnectStations(id_out, id_in, id_pipe);
+			else
+				cout << "Pipe with this id is not in the found pipes!\n";
 		}
+		else {
+			cout << "There are no free pipes with this diameter!\n" <<
+				"Want to create (\"1\" - yes, \"0\" - no)?: ";
+			if (GetCorrectNumber(0, 1)) {
+				Pipe p = gss.AddPipe(diameter);
+				gss.ConnectStations(id_out, id_in, p.GetId());
+			}
 
+		}
 	}
+	else
+		cout << "Stations not found!\n";
 }
 
 void MenuTopologicalSorting(GasSupplySystem& gss)
@@ -422,7 +453,7 @@ void MenuTopologicalSorting(GasSupplySystem& gss)
 	if (ObjectsExist(result)) {
 		cout << "TOPOLOGICAL SORTING: ";
 		for (auto& id_cs : result)
-			cout << id_cs << ", ";
+			cout << id_cs << " ";
 		cout << "\n";
 	}
 	else

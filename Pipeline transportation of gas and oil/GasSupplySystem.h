@@ -64,8 +64,12 @@ public:
 
 	void ConnectStations(int id_out, int id_in, int id_pipe);
 	void DeleteConnection(int id_pipe);
+	bool IsPipeConnected(int id_object);
+	bool IsCSConnected(int id_cs);
 	std::vector<int> TopologicalSorting();
 
+	bool PipeExist(int id_pipe);
+	bool CSExist(int id_cs);
 	bool IsPipeObjectsEmpty();
 	bool IsCSObjectsEmpty();
 

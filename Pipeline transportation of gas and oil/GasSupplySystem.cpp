@@ -394,6 +394,36 @@ vector<int> GasSupplySystem::TopologicalSorting()
 	return result;
 }
 
+bool GasSupplySystem::IsPipeConnected(int id_pipe)
+{
+	if (connections.contains(id_pipe))
+		return true;
+	return false;
+}
+
+bool GasSupplySystem::IsCSConnected(int id_cs)
+{
+	for (auto& [id, edge] : connections) {
+		if (edge.id_in == id_cs || edge.id_out == id_cs)
+			return true;
+	}
+	return false;
+}
+
+bool GasSupplySystem::PipeExist(int id_pipe)
+{
+	if (pipe_objects.contains(id_pipe))
+		return true;
+	return false;
+}
+
+bool GasSupplySystem::CSExist(int id_cs)
+{
+	if (cs_objects.contains(id_cs))
+		return true;
+	return false;
+}
+
 bool GasSupplySystem::IsPipeObjectsEmpty()
 {
 	if (pipe_objects.size() == 0) {
