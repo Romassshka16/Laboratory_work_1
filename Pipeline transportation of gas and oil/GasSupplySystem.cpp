@@ -386,12 +386,18 @@ void GasSupplySystem::DeleteConnection(int id_pipe)
 
 vector<int> GasSupplySystem::TopologicalSorting()
 {
-	Graph graph(cs_objects, connections);
+	Graph graph(cs_objects, pipe_objects, connections);
 	vector<int> result;
 	result.reserve(cs_objects.size());
 	if (graph.isDAG())
 		result = graph.TopologicalSorting();
 	return result;
+}
+
+unordered_map<int, double> GasSupplySystem::ShortestDistance(int id_cs)
+{
+	Graph graph(cs_objects, pipe_objects, connections);
+	return graph.Dijkstra(id_cs);
 }
 
 bool GasSupplySystem::IsPipeConnected(int id_pipe)

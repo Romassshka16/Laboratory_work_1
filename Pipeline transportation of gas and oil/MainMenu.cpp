@@ -460,9 +460,40 @@ void MenuTopologicalSorting(GasSupplySystem& gss)
 		cout << "Topological sorting is not possible. There are cycles!\n";
 }
 
+void MenuShortestDistance(GasSupplySystem& gss)
+{
+	cout << "Enter the id station you want to search from: ";
+	int id_cs = GetCorrectNumber(1, INT_MAX);
+	if (gss.IsCSConnected(id_cs)) {
+		unordered_map<int, double> found_distances = gss.ShortestDistance(id_cs);
+		cout << "Distance to one station or for all? (\"1\" - one, \"0\" - all): ";
+		if (GetCorrectNumber(0, 1)) {
+			int id_second_cs = EnterStationsID();
+			if (gss.IsCSConnected(id_second_cs))
+				cout << "Distance to the station " << id_second_cs
+				<< ": " << found_distances.at(id_second_cs) << "\n";
+		}
+		else {
+			for (auto& [id_second_cs, dist] : found_distances) {
+				cout << "Distance to the station " << id_second_cs
+					<< ": " << found_distances.at(id_second_cs) << "\n";
+			}
+		}
+
+	}
+	else
+		cout << "Station not in graph!\n";
+}
+
+void MenuMaxFlow(GasSupplySystem& gss)
+{
+
+}
+
 void MenuNetwork(GasSupplySystem& gss)
 {
-	vector<string> menu = { "Connect stations", "Topological sorting" };
+	vector<string> menu = { "Connect stations", "Topological sorting",
+	"Shortest distance", "Max Flow"};
 	if (!gss.IsCSObjectsEmpty() && !gss.IsPipeObjectsEmpty()) {
 		switch (ChooseActionMenu(menu, true))
 		{
@@ -474,6 +505,16 @@ void MenuNetwork(GasSupplySystem& gss)
 		case 2:
 		{
 			MenuTopologicalSorting(gss);
+			break;
+		}
+		case 3:
+		{
+			MenuShortestDistance(gss);
+			break;
+		}
+		case 4:
+		{
+			MenuMaxFlow(gss);
 			break;
 		}
 		case 0:

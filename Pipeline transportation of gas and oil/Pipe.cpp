@@ -43,6 +43,11 @@ int Pipe::GetDiameter() const
 	return diameter;
 }
 
+double Pipe::GetLength() const
+{
+	return length;
+}
+
 int Pipe::GetId() const
 {
 	return id;

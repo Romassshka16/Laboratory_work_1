@@ -18,6 +18,7 @@ public:
 
 	std::string GetKmMark() const;
 	int GetDiameter() const;
+	double GetLength() const;
 	int GetId() const;
 
 	void SetDiameter(int d);
