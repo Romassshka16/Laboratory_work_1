@@ -1,4 +1,4 @@
-#include "MainMenu.h"
+﻿#include "MainMenu.h"
 
 using namespace std;
 
@@ -443,40 +443,51 @@ void MenuConnectStations(GasSupplySystem& gss)
 
 		}
 	}
-	else
-		cout << "Stations not found!\n";
 }
 
 void MenuTopologicalSorting(GasSupplySystem& gss)
 {
-	vector<int> result = gss.TopologicalSorting();
-	if (ObjectsExist(result)) {
+	Graph graph = gss.InitGraph();
+	if (graph.isDAG()) {
+		vector<int> result = graph.TopologicalSorting();
 		cout << "TOPOLOGICAL SORTING: ";
 		for (auto& id_cs : result)
 			cout << id_cs << " ";
 		cout << "\n";
 	}
-	else
+	else 
 		cout << "Topological sorting is not possible. There are cycles!\n";
+}
+
+void OutputDistance(unordered_map<int, double>& distances, int id_second_cs)
+{
+	if (distances.at(id_second_cs) == DBL_MAX)
+		cout << "no way\n";
+	else
+		cout << distances.at(id_second_cs) << "\n";
 }
 
 void MenuShortestDistance(GasSupplySystem& gss)
 {
+	Graph graph = gss.InitGraph();
 	cout << "Enter the id station you want to search from: ";
-	int id_cs = GetCorrectNumber(1, INT_MAX);
-	if (gss.IsCSConnected(id_cs)) {
-		unordered_map<int, double> found_distances = gss.ShortestDistance(id_cs);
+	int id_first_cs = GetCorrectNumber(1, INT_MAX);
+	if (gss.IsCSConnected(id_first_cs)) {
+		unordered_map<int, double> found_distances = graph.Dijkstra(id_first_cs);
 		cout << "Distance to one station or for all? (\"1\" - one, \"0\" - all): ";
 		if (GetCorrectNumber(0, 1)) {
 			int id_second_cs = EnterStationsID();
-			if (gss.IsCSConnected(id_second_cs))
+			if (gss.IsCSConnected(id_second_cs)) {
 				cout << "Distance to the station " << id_second_cs
-				<< ": " << found_distances.at(id_second_cs) << "\n";
+					<< ": ";
+				OutputDistance(found_distances, id_second_cs);
+			}
 		}
 		else {
 			for (auto& [id_second_cs, dist] : found_distances) {
 				cout << "Distance to the station " << id_second_cs
-					<< ": " << found_distances.at(id_second_cs) << "\n";
+					<< ": ";
+				OutputDistance(found_distances, id_second_cs);
 			}
 		}
 
@@ -487,7 +498,14 @@ void MenuShortestDistance(GasSupplySystem& gss)
 
 void MenuMaxFlow(GasSupplySystem& gss)
 {
-
+	Graph graph = gss.InitGraph();
+	int id_out, id_in;
+	EnteringIDs(id_out, id_in);
+	if (gss.IsCSConnected(id_out) && gss.IsPipeConnected(id_in))
+	{
+		cout << "Maximum flow from station " << id_out << " to "
+			<< "station " << id_in << ": " << graph.FordFulkerson(id_out, id_in) << "\n";
+	}
 }
 
 void MenuNetwork(GasSupplySystem& gss)

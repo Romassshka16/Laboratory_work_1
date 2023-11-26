@@ -45,7 +45,12 @@ int Pipe::GetDiameter() const
 
 double Pipe::GetLength() const
 {
-	return length;
+	return status ? DBL_MAX : length;
+}
+
+double Pipe::GetCapacity() const
+{
+	return status ? 0 : length;
 }
 
 int Pipe::GetId() const
@@ -62,23 +67,6 @@ Pipe::Pipe()
 {
 	id = max_id++;
 }
-
-//istream& operator>>(istream& in, Pipe& p)
-//{
-//
-//	cout << "Kilometer mark: ";
-//	p.km_mark = EnterLine();
-//
-//	cout << "Length (0.1 - 5000 km): ";
-//	p.length = GetCorrectNumber(0.1, 5000.0);
-//
-//	p.diameter = p.EnterCorrectDiameter();
-//
-//	cout << "Status (\"1\" - in repair, \"0\" - in working condition): ";
-//	p.status = GetCorrectNumber(0, 1);
-//
-//	return in;
-//}
 
 void Pipe::InitPipe(int diam)
 {

@@ -362,6 +362,16 @@ void GasSupplySystem::DeleteCS(int id_cs)
 		cout << "Station with entered ID not found!\n";
 }
 
+void GasSupplySystem::DeleteConnection(int id_pipe)
+{
+	if (connections.contains(id_pipe)) {
+		connections.erase(id_pipe);
+		cout << "Connection was deleted\n";
+	}
+	else
+		cout << "Connection not found!\n";
+}
+
 void GasSupplySystem::ConnectStations(int id_out, int id_in, int id_pipe)
 {
 	if (cs_objects.contains(id_out) && cs_objects.contains(id_in))
@@ -374,60 +384,10 @@ void GasSupplySystem::ConnectStations(int id_out, int id_in, int id_pipe)
 		cout << "Stations with this IDs not found\n";
 }
 
-void GasSupplySystem::DeleteConnection(int id_pipe)
-{
-	if (connections.contains(id_pipe)) {
-		connections.erase(id_pipe);
-		cout << "Connection was deleted\n";
-	}
-	else
-		cout << "Connection not found!\n";
-}
-
-vector<int> GasSupplySystem::TopologicalSorting()
+Graph GasSupplySystem::InitGraph()
 {
 	Graph graph(cs_objects, pipe_objects, connections);
-	vector<int> result;
-	result.reserve(cs_objects.size());
-	if (graph.isDAG())
-		result = graph.TopologicalSorting();
-	return result;
-}
-
-unordered_map<int, double> GasSupplySystem::ShortestDistance(int id_cs)
-{
-	Graph graph(cs_objects, pipe_objects, connections);
-	return graph.Dijkstra(id_cs);
-}
-
-bool GasSupplySystem::IsPipeConnected(int id_pipe)
-{
-	if (connections.contains(id_pipe))
-		return true;
-	return false;
-}
-
-bool GasSupplySystem::IsCSConnected(int id_cs)
-{
-	for (auto& [id, edge] : connections) {
-		if (edge.id_in == id_cs || edge.id_out == id_cs)
-			return true;
-	}
-	return false;
-}
-
-bool GasSupplySystem::PipeExist(int id_pipe)
-{
-	if (pipe_objects.contains(id_pipe))
-		return true;
-	return false;
-}
-
-bool GasSupplySystem::CSExist(int id_cs)
-{
-	if (cs_objects.contains(id_cs))
-		return true;
-	return false;
+	return graph;
 }
 
 bool GasSupplySystem::IsPipeObjectsEmpty()
@@ -444,6 +404,37 @@ bool GasSupplySystem::IsCSObjectsEmpty()
 	if (cs_objects.size() == 0) {
 		cout << "System has no stations!\n";
 		return true;
+	}
+	return false;
+}
+
+bool GasSupplySystem::PipeExist(int id_pipe)
+{
+	if (pipe_objects.contains(id_pipe))
+		return true;
+	return false;
+}
+
+bool GasSupplySystem::CSExist(int id_cs)
+{
+	if (cs_objects.contains(id_cs))
+		return true;
+	cout << "Station not found!\n";
+	return false;
+}
+
+bool GasSupplySystem::IsPipeConnected(int id_pipe)
+{
+	if (connections.contains(id_pipe))
+		return true;
+	return false;
+}
+
+bool GasSupplySystem::IsCSConnected(int id_cs)
+{
+	for (auto& [id, edge] : connections) {
+		if (edge.id_in == id_cs || edge.id_out == id_cs)
+			return true;
 	}
 	return false;
 }
